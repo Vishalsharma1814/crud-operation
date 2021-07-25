@@ -13,7 +13,7 @@ app.use(cors());
 //mongoose connection
 mongoose.connect(
 	"mongodb+srv://vishal:vishal@cluster0.huv99.mongodb.net/mern-app?retryWrites=true&w=majority",
-	{ useNewUrlParser: true, useUnifiedTopology: true }
+	{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }
 );
 
 //schema and model
@@ -53,6 +53,25 @@ app.delete("/delete/:id", function (req, res) {
 			console.log(err);
 		}
 	});
+});
+
+app.put("/put/:id", (req, res) => {
+	const updatedItem = {
+		title: req.body.title,
+		genre: req.body.genre,
+		year: req.body.year,
+	};
+	Movie.findByIdAndUpdate(
+		{ _id: req.params.id },
+		{ $set: updatedItem },
+		(req, res, err) => {
+			if (!err) {
+				console.log("item updated");
+			} else {
+				console.log(err);
+			}
+		}
+	);
 });
 
 app.listen(PORT, function () {
